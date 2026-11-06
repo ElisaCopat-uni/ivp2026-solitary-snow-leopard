@@ -1,0 +1,17 @@
+# Kaggle data (kept outside the repo in ../ivp-2026, not redistributed)
+ivp-2026/
+*.jpg
+*.jpeg
+*.png
+!report/figures/*
+
+# Python / Jupyter
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+ivp2026/
+.venv/
+
+# macOS / iCloud
+.DS_Store
+*.icloud
