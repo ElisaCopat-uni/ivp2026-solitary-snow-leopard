@@ -5,6 +5,33 @@ from matplotlib import pyplot as plt
 import glob
 
 
+def time_to_min(time):
+    h,m=time.split(":")
+    h=int(h)
+    h=h%12
+    m=int(m)
+    return h*60+m
+
+def time_difference(ta,tb):
+    a=time_to_min(ta)
+    b=time_to_min(tb)
+    diff=abs(a-b)
+    diff=min(diff,720-diff)
+    return diff
+
+def score(ta,tb):
+    x=time_difference(ta,tb)
+    if x<=2:
+        return 1.0
+    elif x<=10:
+        return 0.8
+    elif x<=30:
+        0.5
+    else:
+        return 0.0
+
+print(score("03:13", "03:13"))
+
 folder = "../ivp-2026/train/train"
 images=pandas.read_csv("../ivp-2026/train.csv")
 
@@ -24,5 +51,4 @@ for i in range(25,35):
     ax.axis("off")
 
 plt.tight_layout()             
-plt.show()
-
+#plt.show()
