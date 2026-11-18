@@ -11,7 +11,7 @@ images=pandas.read_csv("../ivp-2026/train.csv")
 
 fig, axes = plt.subplots(3, 6, figsize=(15, 12)) 
 
-for i in range(25,35):
+for i in range(10,20):
     filename = images["ID"][i]
     true_time = images["time"][i]
 
@@ -24,16 +24,16 @@ for i in range(25,35):
     scale = 500 / w
     resized = cv2.resize(gray, (500, int(h * scale)))
     #canny step
-    blurred=cv2.GaussianBlur(resized, (5, 5), 0)
+    blurred=cv2.GaussianBlur(resized, (9, 9), 0)
 
     #canny+hough voting
     circles = cv2.HoughCircles(
         blurred, cv2.HOUGH_GRADIENT,
         dp=1,            # accumulator size = image size
         minDist=500,     # minimum distance between two circle centres - one clock per image
-        param1=100,      # Canny's high threshold (strong edges)
+        param1=200,      # Canny's high threshold (strong edges) -> 100 gives 7/10
         param2=30,       # votes needed: LOWER = more circles found (also fake ones)
-        minRadius=50,   # smallest clock radius in pixels 
+        minRadius=30,   # smallest clock radius in pixels 
         maxRadius=250    # biggest clock radius in pixels - one clock per image
     )
 
@@ -46,7 +46,7 @@ for i in range(25,35):
     else:
         print(filename, "→ no circle found")
 
-    ax = axes.flat[i-25]         
+    ax = axes.flat[i-10]         
     ax.imshow(show)
     ax.set_title(true_time)
     ax.axis("off")
