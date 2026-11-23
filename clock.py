@@ -8,8 +8,10 @@ from data import score
 
 
 
-folder = "../ivp-2026/train/train"
-images=pandas.read_csv("../ivp-2026/train.csv")
+mode = "test"    # "train" = score on train, "test" = make the Kaggle file
+folder = f"../ivp-2026/{mode}/{mode}"
+images = pandas.read_csv(f"../ivp-2026/{mode}.csv")
+results = []
 
 fig, axes = plt.subplots(3, 6, figsize=(15, 12)) 
 
@@ -29,7 +31,10 @@ def group_hands(hand_lines, max_diff=10):
 total = 0
 for i in range(len(images)):
     filename = images["ID"][i]
-    true_time = images["time"][i]
+    if mode == "train":
+        true_time = images["time"][i]
+    else:
+        true_time = "?"
 
     path = os.path.join(folder, filename)
     img = cv2.imread(path)
@@ -103,7 +108,9 @@ for i in range(len(images)):
         print(filename, "→ no circle found")
         pred = "12:00"
 
-    total += score(pred, true_time) #scoring
+    if mode == "train":
+        total += score(pred, true_time) #scoring
+    results.append((filename, pred))
 
     if i < 18:
         ax = axes.flat[i]         
@@ -111,6 +118,10 @@ for i in range(len(images)):
         ax.set_title(true_time)
         ax.axis("off")
 
-print("average score:", total / len(images))
+if mode == "train":
+    print("average score:", total / len(images))
+else:
+    pandas.DataFrame(results, columns=["ID", "time"]).to_csv("../submission.csv", index=False)
+    print("saved ../submission.csv with", len(results), "rows")
 plt.tight_layout()             
 plt.show()
