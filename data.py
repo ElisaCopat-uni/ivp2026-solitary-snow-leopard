@@ -26,29 +26,31 @@ def score(ta,tb):
     elif x<=10:
         return 0.8
     elif x<=30:
-        0.5
+        return 0.5
     else:
         return 0.0
 
-print(score("03:13", "03:13"))
+if __name__ == "__main__":
+    print(score("03:13", "03:13"))
+    print(score("03:00", "03:20"))
 
-folder = "../ivp-2026/train/train"
-images=pandas.read_csv("../ivp-2026/train.csv")
+    folder = "../ivp-2026/train/train"
+    images=pandas.read_csv("../ivp-2026/train.csv")
 
-fig, axes = plt.subplots(3, 6, figsize=(15, 12)) 
+    fig, axes = plt.subplots(3, 6, figsize=(15, 12)) 
 
-for i in range(25,35):
-    filename = images["ID"][i]
-    true_time = images["time"][i]
+    for i in range(25,35):
+        filename = images["ID"][i]
+        true_time = images["time"][i]
 
-    path = os.path.join(folder, filename)
-    img = cv2.imread(path)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        path = os.path.join(folder, filename)
+        img = cv2.imread(path)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-    ax = axes.flat[i-25]         
-    ax.imshow(img)
-    ax.set_title(true_time)
-    ax.axis("off")
+        ax = axes.flat[i-25]         
+        ax.imshow(img)
+        ax.set_title(true_time)
+        ax.axis("off")
 
-plt.tight_layout()             
-#plt.show()
+    plt.tight_layout()             
+    #plt.show()
