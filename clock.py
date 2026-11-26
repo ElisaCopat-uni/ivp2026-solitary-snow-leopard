@@ -8,7 +8,7 @@ from data import score
 
 
 
-mode = "train"    # "train" = score on train, "test" = make the Kaggle file
+mode = "test"    # "train" = score on train, "test" = make the Kaggle file
 folder = f"../ivp-2026/{mode}/{mode}"
 images = pandas.read_csv(f"../ivp-2026/{mode}.csv")
 results = []
@@ -68,7 +68,7 @@ for i in range(len(images)):
         cv2.circle(show, (x, y), 3, (255, 0, 0), -1)  # centre
 
         #edges 
-        lines = cv2.HoughLinesP(edges, 1, np.pi / 180, threshold=30, minLineLength=10, maxLineGap=5)
+        lines = cv2.HoughLinesP(edges, 1, np.pi / 180, threshold=30, minLineLength=9, maxLineGap=5)
         #cv2.line(show, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 1)
         if lines is not None:
                 for x1, y1, x2, y2 in lines.reshape(-1, 4):
