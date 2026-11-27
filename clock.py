@@ -8,7 +8,7 @@ from data import score
 
 
 
-mode = "train"    # "train" = score on train, "test" = make the Kaggle file
+mode = "test"    # "train" = score on train, "test" = make the Kaggle file
 folder = f"../ivp-2026/{mode}/{mode}"
 images = pandas.read_csv(f"../ivp-2026/{mode}.csv")
 results = []
@@ -54,20 +54,10 @@ for i in range(len(images)):
         dp=1,            # accumulator size = image size
         minDist=500,     # minimum distance between two circle centres - one clock per image
         param1=200,      # Canny's high threshold (strong edges) -> 100 gives 7/10
-        param2=40,       # votes needed: LOWER = more circles found (also fake ones)
+        param2=30,       # votes needed: LOWER = more circles found (also fake ones)
         minRadius=30,   # smallest clock radius in pixels 
         maxRadius=250    # biggest clock radius in pixels - one clock per image
     )
-    if(circles is None):
-        circles = cv2.HoughCircles(
-                blurred, cv2.HOUGH_GRADIENT,
-                dp=1,            # accumulator size = image size
-                minDist=500,     # minimum distance between two circle centres - one clock per image
-                param1=200,      # Canny's high threshold (strong edges) -> 100 gives 7/10
-                param2=25,       # votes needed: LOWER = more circles found (also fake ones)
-                minRadius=30,   # smallest clock radius in pixels 
-                maxRadius=250    # biggest clock radius in pixels - one clock per image
-            )
 
     show = cv2.cvtColor(edges, cv2.COLOR_GRAY2RGB)
     if circles is not None:
@@ -78,17 +68,13 @@ for i in range(len(images)):
         cv2.circle(show, (x, y), 3, (255, 0, 0), -1)  # centre
 
         #edges 
-        lines = cv2.HoughLinesP(edges, 1, np.pi / 180, threshold=30, minLineLength=8, maxLineGap=5)
+        lines = cv2.HoughLinesP(edges, 1, np.pi / 180, threshold=30, minLineLength=9, maxLineGap=5)
         #cv2.line(show, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 1)
         if lines is not None:
                 for x1, y1, x2, y2 in lines.reshape(-1, 4):
                     d1 = np.hypot(x1 - x, y1 - y)   
                     d2 = np.hypot(x2 - x, y2 - y)  
                     if min(d1,d2) <= 0.35*r and max(d1,d2) <= r: 
-                        dot = (x1 - x) * (x2 - x) + (y1 - y) * (y2 - y)
-                        #check the seconds hand tail
-                        if dot<0 and min(d1, d2) >15:
-                            continue
                         cv2.line(show, (x1, y1), (x2, y2), (0, 255, 0), 2)
                         if d1 > d2:
                             tip_x, tip_y = x1, y1
