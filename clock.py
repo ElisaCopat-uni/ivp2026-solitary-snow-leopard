@@ -85,6 +85,10 @@ for i in range(len(images)):
                     d1 = np.hypot(x1 - x, y1 - y)   
                     d2 = np.hypot(x2 - x, y2 - y)  
                     if min(d1,d2) <= 0.35*r and max(d1,d2) <= r: 
+                        dot = (x1 - x) * (x2 - x) + (y1 - y) * (y2 - y)
+                        #check the seconds hand tail
+                        if dot<0 and min(d1, d2) >15:
+                            continue
                         cv2.line(show, (x1, y1), (x2, y2), (0, 255, 0), 2)
                         if d1 > d2:
                             tip_x, tip_y = x1, y1
